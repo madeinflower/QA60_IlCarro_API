@@ -1,0 +1,452 @@
+{
+	"info": {
+		"_postman_id": "fbf9ae7b-65ab-4be5-b344-87b53414e56d",
+		"name": "QA60_iLCarro_TT",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22558597"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Positive",
+					"item": [
+						{
+							"name": "Login Registered User",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"var jsonData = pm.response.json();",
+											"pm.environment.set(\"accessToken\", jsonData.accessToken);",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"password\": \"Password1@\",\n  \"username\": \"tania@gmail.com\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/v1/user/login/usernamepassword",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"v1",
+										"user",
+										"login",
+										"usernamepassword"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Negative",
+					"item": [
+						{
+							"name": "Login User With Wrong Email (401)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"",
+											"",
+											"pm.test(\"Status code is 401\", function () {",
+											"    pm.response.to.have.status(401);",
+											"});",
+											"",
+											"pm.test(\"Value message:Login or Password incorrect\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.message).to.eql(\"Login or Password incorrect\");",
+											"});",
+											"",
+											"pm.test(\"Value error:Unauthorized\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.error).to.eql(\"Unauthorized\");",
+											"});",
+											"",
+											"",
+											"pm.test(\"Body matches string:Unauthorized\", function () {",
+											"    pm.expect(pm.response.text()).to.include(\"Unauthorized\");",
+											"});",
+											"",
+											"pm.test(\"Content-Type is present\", function () {",
+											"    pm.response.to.have.header(\"Content-Type\");",
+											"});",
+											"",
+											"pm.test(\"Unauthorized POST request\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([401]);",
+											"});",
+											"",
+											"pm.test(\"Status code name has string: Unauthorized\", function () {",
+											"    pm.response.to.have.status(\"Unauthorized\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"password\": \"Password1@\",\n  \"username\": \"taniagmail.com\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/v1/user/login/usernamepassword",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"v1",
+										"user",
+										"login",
+										"usernamepassword"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Car",
+			"item": [
+				{
+					"name": "Positive",
+					"item": [
+						{
+							"name": "Add car",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Message equals: Car added successfully \", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.message).to.eql(\"Car added successfully\");",
+											"});",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{accessToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"serialNumber\":\"{{$timestamp}}\",\n  \"manufacture\": \"string\",\n  \"model\": \"string\",\n  \"year\": \"string\",\n  \"fuel\": \"string\",\n  \"seats\": 0,\n  \"carClass\": \"string\",\n  \"pricePerDay\": 0,\n  \"about\": \"string\",\n  \"city\": \"Haifa\",\n  \"lat\": 0,\n  \"lng\": 0,\n  \"image\": \"string\",\n  \"owner\": \"string\",\n  \"bookedPeriods\": [\n    {\n      \"email\": \"string\",\n      \"startDate\": \"2025-07-21\",\n      \"endDate\": \"2025-07-21\"\n    }\n  ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/v1/cars",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"v1",
+										"cars"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get users cars",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											" var responseJson = JSON.parse(responseBody);",
+											" var sNumber =[];",
+											" var list = (responseJson.cars).length;",
+											"",
+											"",
+											" for(var i = 0;i< list; i++){",
+											"     var counter = responseJson.cars[i];",
+											"     number = counter.serialNumber",
+											"     sNumber.push(number)",
+											" }",
+											"sNumber = JSON.stringify(sNumber).substring(2,12);",
+											"pm.environment.set(\"serialNumber\",sNumber);",
+											"",
+											" console.log(\"serialNumber is \",sNumber)",
+											"",
+											"const varSerialNumber = pm.variables.get('var_serial_number');"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{accessToken}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseURL}}/v1/cars/my",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"v1",
+										"cars",
+										"my"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete car by ID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var responseJson = pm.response.json(); // Changed to use pm.response.json()",
+											"var sNumber = [];",
+											"var list = (responseJson.cars || []).length; // Added fallback to avoid TypeError",
+											"",
+											"for (var i = 0; i < list; i++) {",
+											"    var counter = responseJson.cars[i];",
+											"    var number = counter.serialNumber;",
+											"    sNumber.push(number);",
+											"}",
+											"sNumber = JSON.stringify(sNumber).substring(2, 12);",
+											"pm.environment.set(\"serialNumber\", sNumber);",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest({\r",
+											"    url:\"https://ilcarro-backend.herokuapp.com/v1/cars/my\",\r",
+											"    header:{\r",
+											"        \"Authorization\": pm.environment.get(\"accessToken\")\r",
+											"    }\r",
+											"}, function(err,responseBody){\r",
+											"var responseJson = responseBody.json();\r",
+											"var sNumber =[];\r",
+											"var list = (responseJson.cars).length;\r",
+											"\r",
+											"for(var i = 0;i< list; i++){\r",
+											"    var counter = responseJson.cars[i];\r",
+											"    number = counter.serialNumber\r",
+											"    sNumber.push(number)\r",
+											"}\r",
+											"sNumber = JSON.stringify(sNumber).substring(2,12);\r",
+											"pm.environment.set(\"serialNumber\",sNumber);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{accessToken}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseURL}}/v1/cars/{{serialNumber}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"v1",
+										"cars",
+										"{{serialNumber}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Negative",
+					"item": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"pm.test(\"Response time is less than 3000ms\", function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(3000);",
+					"});"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "ilcarro-backend.herokuapp.com",
+			"type": "default"
+		}
+	]
+}
